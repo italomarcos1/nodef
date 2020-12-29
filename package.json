@@ -4,16 +4,21 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "date-fns": "^2.16.1",
     "express": "^4.17.1",
+    "pg": "^8.5.1",
+    "typeorm": "^0.2.29",
     "uuid": "^8.3.2",
     "uuidv4": "^6.2.6"
   },
   "scripts": {
     "ds": "ts-node-dev --transpile-only --inspect --ignore-watch node_modules src/server.ts",
-    "ln": "eslint --fix src --ext .ts"
+    "ln": "eslint --fix src --ext .ts",
+    "trm": "ts-node-dev ./node_modules/typeorm/cli.js"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.9",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.0",

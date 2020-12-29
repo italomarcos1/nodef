@@ -1,9 +1,15 @@
 import express from 'express';
 
-const server = express();
+import { createConnection } from 'typeorm';
 
-server.get('/', (request, response) =>
-  response.json({ message: 'batata doce' }),
-);
+createConnection();
+
+import routes from './routes';
+
+const server = express();
+server.use(express.json());
+server.use(routes);
+
+server.get('/', (_, response) => response.json({ message: 'batata doce' }));
 
 server.listen(3333, () => console.log('Rodando...'));
