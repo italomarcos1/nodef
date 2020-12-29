@@ -1,6 +1,6 @@
+import { Repository } from 'typeorm';
 import { startOfHour } from 'date-fns';
 import Appointment from '../models/Appointment';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 interface Request {
   provider_id: string;
@@ -8,25 +8,25 @@ interface Request {
 }
 
 export default class CreateAppointmentService {
-  private appointmentsRepository: AppointmentsRepository;
+  private appointmentsRepository: Repository<Appointment>;
 
-  constructor(appointmentsRepository: AppointmentsRepository) {
+  constructor(appointmentsRepository: Repository<Appointment>) {
     this.appointmentsRepository = appointmentsRepository;
   }
 
   public async execute({ provider_id, date }: Request): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
 
-    const bookingAlreadyTaken = await this.appointmentsRepository.findByDate(
-      appointmentDate,
-    );
+    const bookingAlreadyTaken = await this.appointmentsRepository.findOne({
+      where: { booking_date: appointmentDate },
+    });
 
     if (bookingAlreadyTaken)
       throw Error("There's an appointment set to this hour.");
 
     const appointment = this.appointmentsRepository.create({
       provider_id,
-      date: appointmentDate,
+      booking_date: appointmentDate,
     });
 
     await this.appointmentsRepository.save(appointment);
