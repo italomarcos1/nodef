@@ -2,6 +2,8 @@ import { startOfHour } from 'date-fns';
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
+import AppError from '../errors/AppError';
+
 interface Request {
   provider_id: string;
   date: Date;
@@ -22,11 +24,11 @@ export default class CreateAppointmentService {
     );
 
     if (bookingAlreadyTaken)
-      throw Error("There's an appointment set to this hour.");
+      throw new AppError("There's an appointment set to this hour.");
 
     const appointment = this.appointmentsRepository.create({
       provider_id,
-      date: appointmentDate,
+      booking_date: appointmentDate,
     });
 
     await this.appointmentsRepository.save(appointment);
