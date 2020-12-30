@@ -23,7 +23,7 @@ export default class Appointment {
   provider: string;
 
   @Column('timestamp with time zone')
-  date: Date;
+  booking_date: Date;
 
   @CreateDateColumn()
   created_at: Date;

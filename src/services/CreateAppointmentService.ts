@@ -26,7 +26,7 @@ export default class CreateAppointmentService {
 
     const appointment = this.appointmentsRepository.create({
       provider_id,
-      date: appointmentDate,
+      booking_date: appointmentDate,
     });
 
     await this.appointmentsRepository.save(appointment);
