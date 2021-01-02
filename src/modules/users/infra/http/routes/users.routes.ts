@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { getRepository } from 'typeorm';
 import multer from 'multer';
 
-import User from '@modules/users/infra/typeorm/entities/User';
 import CreateUserService from '@modules/users/services/CreateUserService';
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import multerConfig from '@config/multer';
 
 import authentication from '../middlewares/authentication';
@@ -15,7 +14,7 @@ const upload = multer(multerConfig);
 usersRouter.post('/', async (request, response) => {
   const { name, email, password } = request.body;
 
-  const usersRepository = getRepository(User);
+  const usersRepository = new UsersRepository();
   const createUserService = new CreateUserService(usersRepository);
 
   const user = await createUserService.execute({ name, email, password });
@@ -33,7 +32,7 @@ usersRouter.patch(
       file: { filename: avatarUrl },
     } = request;
 
-    const usersRepository = getRepository(User);
+    const usersRepository = new UsersRepository();
     const updateUserAvatarService = new UpdateUserAvatarService(
       usersRepository,
     );

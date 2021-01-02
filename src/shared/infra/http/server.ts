@@ -4,11 +4,14 @@ import 'express-async-errors';
 
 createConnection();
 
+import multerConfig from '@config/multer';
+
 import routes from '../http/routes';
 import AppError from '@shared/errors/AppError';
 
 const server = express();
 server.use(express.json());
+server.use('/files', express.static(multerConfig.destination));
 server.use(routes);
 
 server.use(
