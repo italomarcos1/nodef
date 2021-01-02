@@ -6,6 +6,7 @@ createConnection();
 
 import routes from '../http/routes';
 import AppError from '@shared/errors/AppError';
+import '@shared/container';
 
 const server = express();
 server.use(express.json());

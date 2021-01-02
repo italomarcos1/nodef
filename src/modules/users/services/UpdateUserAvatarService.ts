@@ -1,25 +1,26 @@
-import { Repository } from 'typeorm';
 import { join } from 'path';
 import { promises } from 'fs';
+import { injectable, inject } from 'tsyringe';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/errors/AppError';
 
 import multerConfig from '@config/multer';
+import IUsersRepository from '../repositories/IUsersRepository';
 
 interface Request {
   userId: string;
   avatarUrl: string;
 }
 
+@injectable()
 export default class UpdateUserAvatarService {
-  private usersRepository: Repository<User>;
-
-  constructor(usersRepository: Repository<User>) {
-    this.usersRepository = usersRepository;
-  }
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
 
   public async execute({ userId, avatarUrl }: Request): Promise<User> {
-    const user = await this.usersRepository.findOne(userId);
+    const user = await this.usersRepository.findById(userId);
 
     if (!user) throw new AppError('User not found', 401);
 
@@ -32,10 +33,8 @@ export default class UpdateUserAvatarService {
 
     user.avatar = avatarUrl;
 
-    await this.usersRepository.save(user);
+    const updatedUser = await this.usersRepository.save(user);
 
-    delete user.password;
-
-    return user;
+    return updatedUser;
   }
 }
