@@ -6,9 +6,12 @@ createConnection();
 
 import routes from '../http/routes';
 import AppError from '@shared/errors/AppError';
+import multerConfig from '@config/multer';
+import '@shared/container';
 
 const server = express();
 server.use(express.json());
+server.use('/files', express.static(multerConfig.destination));
 server.use(routes);
 
 server.use(
